@@ -202,31 +202,79 @@ Array.prototype._map = function(callback) {
     }
 }
 
-Array.prototype.reduce = function() {
-
+Array.prototype._reduce = function(callback, initialValue) {
+    if (typeof callback === 'function') {
+        let accumulator = initialValue === undefined ? this[0] : initialValue;
+        for(let i = initialValue === undefined ? 1 : 0; i < this.length; i++) {
+            accumulator =  callback(accumulator, this[i], i, this);
+        }
+        return accumulator;
+    }
 }
 
-Array.prototype.reduceRight = function() {
-    
+Array.prototype._reduceRight = function(callback, initialValue) {
+    if (typeof callback === 'function') {
+        let accumulator = initialValue === undefined ? this[this.length - 1] : initialValue;
+        for(let i = initialValue === undefined ? this.length - 2 : this.length - 1; i >= 0; i--) {
+            accumulator =  callback(accumulator, this[i], i, this);
+        }
+        return accumulator;
+    }
 }
-Array.prototype.reverse = function() {
-    
+Array.prototype._reverse = function() {
+    let left = 0; 
+    let right = this.length - 1;
+    while(left < right) {
+        let temp = this[left];
+        this[left] = this[right];
+        this[right] = temp;
+        left++;
+        right--;
+    }
 }
-Array.prototype.shift = function() {
-    
+
+Array.prototype._slice = function(start, end= this.length) {
+    let result = [];
+    for(let i = start; i < end; i++) {
+        result.push(this[i]);
+    }
+    return result;
 }
-Array.prototype.slice = function() {
-    
+Array.prototype._some = function() {
+    if (typeof callback === 'function') {
+        for(let i=0; i < this.length; i++) {
+            let res = callback(this[i], i, this);
+            if (res === true) {
+                return true;
+            }
+        }
+        return true;
+    }
 }
-Array.prototype.some = function() {
-    
+
+Array.prototype._toString = function() {
+    let str = ''
+    let sep=",";
+    str = this[0]
+    for(let i=1; i < this.length; i++) {
+        str = str + sep +this[i]
+    }
+    return str;
 }
-Array.prototype.sort = function() {
-    
-}
-Array.prototype.toString = function() {
-    
-}
-Array.prototype.values = function() {
-    
+Array.prototype._values = function() {
+    let arr = this;
+    let i = 0;
+    return {
+        next: function() {
+            if (i < arr.length) {
+                let ret =  {
+                    value: arr[i],
+                    done: false
+                }
+                i = i+1;
+                return ret;
+            }
+            return {value: undefined, done: true}
+        }
+    }
 }
